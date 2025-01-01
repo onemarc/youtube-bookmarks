@@ -78,20 +78,35 @@ const setBookmarkAttributes = (src, eventListener, controlParentElement) => {
 
 document.addEventListener("DOMContentLoaded", async () => {
     const activeTab = await getActiveTabURL();
+
+    if (!activeTab.url) {
+        renderEmptyState("Invalid tab");
+        return;
+    }
+
+    if (!activeTab.url.includes("youtube.com/watch")) {
+        renderEmptyState("Not a YouTube video page", "Open any YouTube video to use bookmarks");
+        return;
+    }
+
     const queryParameters = activeTab.url.split("?")[1];
     const urlParameters = new URLSearchParams(queryParameters);
-
     const currentVideo = urlParameters.get("v");
 
-    if (activeTab.url.includes("youtube.com/watch") && currentVideo) {
+    if (currentVideo) {
         chrome.storage.sync.get([currentVideo], (data) => {
             const currentVideoBookmarks = data[currentVideo] ? JSON.parse(data[currentVideo]) : [];
-
             viewBookmarks(currentVideoBookmarks);
         });
-    } else {
-        const container = document.getElementById("container")[0];
-
-        container.innerHTML = '<i class="row">You are not on the YouTube video page.</i>';
     }
 });
+
+const renderEmptyState = (title, subtitle = "") => {
+    const bookmarksElement = document.getElementById("bookmarks");
+    bookmarksElement.innerHTML = `
+        <div class="empty-state">
+            <p class="empty-state-text">${title}</p>
+            ${subtitle ? `<p class="empty-state-subtext">${subtitle}</p>` : ''}
+        </div>
+    `;
+};
