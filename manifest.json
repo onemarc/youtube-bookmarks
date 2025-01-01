@@ -5,7 +5,8 @@
     "permissions": ["storage", "tabs"],
     "host_permissions": ["https://*.youtube.com/*"],
     "background": {
-        "service_worker": "background.js"
+        "service_worker": "background.js",
+        "type": "module"
     },
     "content_scripts": [
         {
@@ -26,9 +27,9 @@
     ],
     "action": {
         "default_icon": {
-            "16": "assets/ext-icon.png",
-            "24": "assets/ext-icon.png",
-            "32": "assets/ext-icon.png"
+            "16": "assets/extension-icon.png",
+            "24": "assets/extension-icon.png",
+            "32": "assets/extension-icon.png"
         },
         "default_title": "YouTube Bookmarks",
         "default_popup": "popup.html"
